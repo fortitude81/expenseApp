@@ -1,0 +1,58 @@
+<div ng-controller="ExpenseController as ctrl">
+<h1>Expense Management application</h1>
+
+<div id="form-box">
+    <h2 ng-hide="ctrl.editMode">Add a new item:</h2>
+
+    <h2 ng-show="ctrl.editMode">Edit Expense:</h2>
+    <form name="expenseForm" rc-submit="ctrl.addExpense()" novalidate>
+        <div>
+            <span>Name of Expense: </span><input ng-required="true" name="expenseName" type="text" ng-model="ctrl.expense.itemName"
+                                      placeholder="What did you spend on?"/>
+        </div>
+				<div>
+					<span>Merchant: </span><input ng-required="true" name="merchantName" type="text" ng-model="ctrl.expense.merchantName"
+																		placeholder="Enter Merchant?"/>
+				</div>
+        <div>
+            <span>Date: </span><input type="text" name="date"
+                                      ng-model="ctrl.expense.date"
+                                      ng-required="true"
+																			placeholder="Enter Date?"/>
+        </div>
+        <div>
+            <span>Amount: </span><input type="text" ng-required="true" name="amount" ng-model="ctrl.expense.amount"
+                                        ng-pattern="/^((\d+(\.\d*)?)|((\d*\.)?\d+))$/" placeholder="How much?">
+        </div>
+        <button ng-if="!ctrl.editMode" type="submit" class="expense-add-btn">Add a new expense</button>
+        <button ng-if="ctrl.editMode" type="submit" class="expense-add-btn">Done</button>
+    </form>
+</div>
+<table>
+    <tr>
+        <th>Reimbursed?</th>
+        <th>status</th>
+        <th>date</th>
+        <th>expense (comment)</th>
+        <th>merchant</th>
+        <th style="text-align: right">amount</th>
+        <th class="table-btn">edit</th>
+        <th class="table-btn">delete</th>
+    </tr>
+    <tr ng-if="ctrl.expenseList.length == 0">
+        <td colspan="4"><span>Your added items will show up here!</span></td>
+    </tr>
+    <tr ng-if="ctrl.expenseList.length"
+        ng-repeat="eachExpense in ctrl.expenseList | orderBy: ctrl.orderByDate">
+        <td><input id="check" type="checkbox" ng-model="check"/></td>
+        <td><span for="check" ng-if="!check">new</span>
+            <span for="check" ng-if="check" ng-model="disable">reimbursed</span></td>
+				<td><span ng-bind="eachExpense.date | date:'dd/MM/yyyy'"></span></td>
+        <td><span ng-bind="eachExpense.itemName"></span></td>
+				<td><span ng-bind="eachExpense.merchantName"></span></td>
+        <td class="amount" style="text-align: right"><span ng-bind="eachExpense.amount"></span></td>
+        <td><i ng-disabled="disable" class="fa fa-pencil" ng-click="ctrl.editExpense(eachExpense)"></i></td>
+        <td><i class="fa fa-trash-o" ng-click="ctrl.deleteExpense(eachExpense.itemId)"></i></td>
+    </tr>
+</table>
+</div>
